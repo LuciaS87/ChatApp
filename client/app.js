@@ -1,3 +1,8 @@
+const socket = io();
+
+socket.on('message', ({ author, content }) => addMessage(author, 
+    content));
+
 const loginForm = document.querySelector('#welcome-form');
 const messagesSection = document.querySelector('#messages-section');
 const messagesList = document.querySelector('#messages-list');
@@ -31,7 +36,9 @@ const sendMessage = function(event) {
         alert('please type message');
     } else {
        addMessage(userName, messageContentInput.value); 
-       message = ''
+       socket.emit('message', { author: userName, content: 
+        message })
+        messageContentInput.value = '';
     }
 }
 
@@ -48,7 +55,7 @@ if(author === userName) {
 }
 const header = document.createElement('h3');
 header.classList.add('message__author');
-if(author === userName){
+if(author !== userName){
     header.innerHTML = author;  
 } else {
     header.innerHTML = 'You';
